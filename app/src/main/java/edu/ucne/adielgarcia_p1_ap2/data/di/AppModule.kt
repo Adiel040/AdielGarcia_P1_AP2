@@ -7,7 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import edu.ucne.adielgarcia_p1_ap2.data.local.database.EntityDatabase
+import edu.ucne.adielgarcia_p1_ap2.data.local.database.SistemaDb
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
@@ -18,11 +18,11 @@ object AppModule {
     fun providesEntityDatabase(@ApplicationContext applicationContext: Context) =
         Room.databaseBuilder(
             applicationContext,
-            EntityDatabase::class.java,
-            "Entity.db"
+            SistemaDb::class.java,
+            "Sistema.db"
         ).fallbackToDestructiveMigration()
             .build()
 
     @Provides
-    fun providesEntityDao(entityDatabase: EntityDatabase) = entityDatabase.entityDao()
+    fun providesSistemaDao(sistemaDb: SistemaDb) = sistemaDb.sistemaDao()
 }
