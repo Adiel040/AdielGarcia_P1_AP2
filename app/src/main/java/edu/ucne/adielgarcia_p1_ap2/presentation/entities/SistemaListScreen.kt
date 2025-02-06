@@ -13,6 +13,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import edu.ucne.adielgarcia_p1_ap2.data.local.entities.SistemaEntity
+import edu.ucne.adielgarcia_p1_ap2.presentation.Sistema.SistemaViewModel
 import kotlinx.coroutines.launch
 import kotlinx. coroutines. CoroutineScope
 
@@ -22,23 +26,36 @@ data class Sistema(val sistemaId: Int, val nombre: String)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SistemaListScreen(
-    sistemaList: List<Sistema>,
-    onBackClick: () -> Unit,
     onAddClick: () -> Unit,
     editarSistema: (Int) -> Unit,
-    eliminarSistema: (Sistema) -> Unit
+    viewModel: SistemaViewModel = hiltViewModel()
 ) {
     val scope = rememberCoroutineScope()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    SistemaListBodyScreen(
+        uiState = uiState,
+        onAddClick = onAddClick,
+        editarSistema = editarSistema,
+        eliminarSistema = { sistemaId ->
+            viewModel.select(sistemaId)
+            viewModel.delete { }
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SistemaListBodyScreen(
+    uiState: SistemaViewModel.UiState,
+    onAddClick: () -> Unit,
+    editarSistema: (Int) -> Unit,
+    eliminarSistema: (Int) -> Unit
+) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(text = "Lista de Sistemas") },
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Volver")
-                    }
-                }
             )
         },
         floatingActionButton = {
@@ -61,8 +78,8 @@ fun SistemaListScreen(
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
             ) {
-                items(sistemaList) { sistema ->
-                    SistemaRow(sistema, editarSistema, eliminarSistema, scope)
+                items(uiState.sistemas) { sistema ->
+                    SistemaRow(sistema, editarSistema, eliminarSistema)
                 }
             }
         }
@@ -71,30 +88,29 @@ fun SistemaListScreen(
 
 @Composable
 private fun SistemaRow(
-    sistema: Sistema,
+    sistema: SistemaEntity,
     editarSistema: (Int) -> Unit,
-    eliminarSistema: (Sistema) -> Unit,
-    scope: CoroutineScope
+    eliminarSistema: (Int) -> Unit
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { editarSistema(sistema.sistemaId) }
+            .clickable { editarSistema(sistema.SistemaId ?: 0) }
             .padding(8.dp)
     ) {
         Text(
             modifier = Modifier.weight(1f),
-            text = sistema.sistemaId.toString(),
+            text = sistema.SistemaId.toString(),
             style = MaterialTheme.typography.bodyLarge
         )
         Text(
             modifier = Modifier.weight(3f),
-            text = sistema.nombre,
+            text = sistema.Nombre,
             style = MaterialTheme.typography.bodyLarge
         )
         IconButton(
-            onClick = { scope.launch { eliminarSistema(sistema) } },
+            onClick = {   },
             modifier = Modifier.padding(start = 8.dp)
         ) {
             Icon(imageVector = Icons.Default.Delete, contentDescription = "Eliminar Sistema")
