@@ -109,16 +109,11 @@ class SistemaViewModel @Inject constructor(
         }
     }
 
-
-
     data class UiState(
         val sistemaId: Int? = null,
         val nombre: String = "",
         val errorMessage: String? = null,
         val sistemas: List<SistemaEntity> = emptyList()
-
-
-
     )
 
     fun UiState.toEntity() = SistemaEntity(
