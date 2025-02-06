@@ -23,9 +23,10 @@ import java.text.SimpleDateFormat
 @Composable
 fun SistemaScreen(
     viewModel: SistemaViewModel = hiltViewModel(), goBack: () -> Unit,
-    onDrawer: () -> Unit
+    id: Int
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    viewModel.select(id)
     SistemaBodyScreen(
         uiState = uiState,
         onNombreChange = viewModel::onNombreChange,

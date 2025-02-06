@@ -1,14 +1,14 @@
 package edu.ucne.adielgarcia_p1_ap2.data.repository
 
-import edu.ucne.adielgarcia_p1_ap2.data.local.dao.Dao
-import edu.ucne.adielgarcia_p1_ap2.data.local.entities.Entity
+import edu.ucne.adielgarcia_p1_ap2.data.local.dao.SistemaDao
+import edu.ucne.adielgarcia_p1_ap2.data.local.entities.SistemaEntity
 import javax.inject.Inject
 
-class EntityRepository @Inject constructor(
-    private val dao: Dao
+class SistemaRepository @Inject constructor(
+    private val sistemadao: SistemaDao
 ) {
-    suspend fun save(entity: Entity) = dao.save(entity)
-    suspend fun find(id: Int) = dao.find(id)
-    suspend fun delete(entity: Entity) = dao.delete(entity)
-    fun getAll() = dao.getAll()
+    suspend fun save(sistema: SistemaEntity) = sistemadao.save(sistema)
+    suspend fun find(id: Int) = sistemadao.find(id)
+    suspend fun delete(sistema: SistemaEntity) = sistemadao.delete(sistema)
+    fun getAll() = sistemadao.getAll()
 }
