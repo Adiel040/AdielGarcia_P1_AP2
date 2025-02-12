@@ -8,7 +8,7 @@ import edu.ucne.adielgarcia_p1_ap2.data.local.entities.SistemaEntity
 
 @Database(
     entities = [SistemaEntity::class],
-    version = 3,
+    version = 1,
     exportSchema = false
 )
 abstract  class SistemaDb: RoomDatabase() {
