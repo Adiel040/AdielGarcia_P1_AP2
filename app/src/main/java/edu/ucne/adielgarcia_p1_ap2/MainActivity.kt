@@ -24,14 +24,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AdielGarcia_P1_AP2Theme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Column(
-                        modifier = Modifier.padding(innerPadding)
-                    ) {
-                        val navHostController = rememberNavController()
-                        AdielGarcia_P1_AP2NavHost(navHostController)
-                    }
-                }
+                val navHost = rememberNavController()
+                AdielGarcia_P1_AP2NavHost(navHostController = navHost)
             }
         }
     }
