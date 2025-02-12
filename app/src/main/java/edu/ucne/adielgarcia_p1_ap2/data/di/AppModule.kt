@@ -15,7 +15,7 @@ import javax.inject.Singleton
 object AppModule {
     @Provides
     @Singleton
-    fun providesEntityDatabase(@ApplicationContext applicationContext: Context) =
+    fun providesParcial1(@ApplicationContext applicationContext: Context) =
         Room.databaseBuilder(
             applicationContext,
             SistemaDb::class.java,

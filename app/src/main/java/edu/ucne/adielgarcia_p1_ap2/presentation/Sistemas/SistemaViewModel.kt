@@ -31,11 +31,15 @@ class SistemaViewModel @Inject constructor(
             when {
                 state.nombre.isBlank() -> {
                     _uiState.update {
-                        it.copy(errorMessage = "La descripción no puede estar vacía")
+                        it.copy(errorMessage = "el Nombre no puede estar vacío")
+                    }
+
+                }
+                state.precio == null || state.precio <= 0 -> {
+                    _uiState.update{
+                        it.copy(errorMessage = "el precio debe ser mayor que 0")
                     }
                 }
-
-
                 else -> {
                     sistemaRepository.save(state.toEntity())
                     _uiState.update {
@@ -55,7 +59,7 @@ class SistemaViewModel @Inject constructor(
                 sistemaId = null,
                 nombre = "",
 
-            )
+                )
         }
     }
     fun select(sistemaId: Int){
@@ -66,6 +70,7 @@ class SistemaViewModel @Inject constructor(
                     it.copy(
                         sistemaId = sistema?.SistemaId,
                         nombre = sistema?.Nombre ?: "",
+                        precio = sistema?.Precio ?: 0.0,
                         errorMessage = null
                     )
                 }
@@ -109,15 +114,24 @@ class SistemaViewModel @Inject constructor(
         }
     }
 
+    fun onPrecioChange(precio: Double){
+        _uiState.update {
+            it.copy(precio = precio)
+        }
+    }
+
     data class UiState(
         val sistemaId: Int? = null,
         val nombre: String = "",
+        val precio: Double = 0.0,
         val errorMessage: String? = null,
         val sistemas: List<SistemaEntity> = emptyList()
     )
 
     fun UiState.toEntity() = SistemaEntity(
         SistemaId=sistemaId,
-        Nombre = nombre
+        Nombre = nombre,
+        Precio = precio
+
     )
 }

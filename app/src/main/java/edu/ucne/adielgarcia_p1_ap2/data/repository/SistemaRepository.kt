@@ -12,3 +12,4 @@ class SistemaRepository @Inject constructor(
     suspend fun delete(sistema: SistemaEntity) = sistemadao.delete(sistema)
     fun getAll() = sistemadao.getAll()
 }
+

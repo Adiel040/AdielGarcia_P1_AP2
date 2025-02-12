@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Upsert
-import edu. ucne. adielgarcia_p1_ap2.data. local. entities. SistemaEntity
+import edu.ucne.adielgarcia_p1_ap2.data.local.entities.SistemaEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -12,10 +12,12 @@ interface SistemaDao {
     @Upsert
     suspend fun save(sistema: SistemaEntity)
 
-    @Query("""
+    @Query(
+        """
         SELECT * FROM Sistema
         WHERE SistemaId = :sistemaId
-    """)
+    """
+    )
     suspend fun find(sistemaId: Int): SistemaEntity?
 
     @Delete
