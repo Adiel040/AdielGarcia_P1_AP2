@@ -1,10 +1,10 @@
-package edu.ucne.adielgarcia_p1_ap2.presentation.entities
+package edu.ucne.adielgarcia_p1_ap2.presentation.Sistemas
 
-import androidx.compose.foundation.layout.*
+import  androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -13,23 +13,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import edu.ucne.adielgarcia_p1_ap2.presentation.Sistema.SistemaViewModel
-import java.text.SimpleDateFormat
 
 @Composable
 fun SistemaScreen(
-    viewModel: SistemaViewModel = hiltViewModel(), goBack: () -> Unit,
-    id: Int
+    viewModel: SistemaViewModel = hiltViewModel(), goBack: () -> Unit
+
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    viewModel.select(id)
     SistemaBodyScreen(
         uiState = uiState,
         onNombreChange = viewModel::onNombreChange,
+        onPrecioChange = viewModel::onPrecioChange,
         save = { viewModel.save(goBack)},
         goBack = goBack,
         nuevo = viewModel::nuevo
@@ -41,6 +41,7 @@ fun SistemaScreen(
 fun SistemaBodyScreen(
     uiState: SistemaViewModel.UiState,
     onNombreChange: (String) -> Unit,
+    onPrecioChange: (Double) -> Unit,
     save: () -> Unit,
     nuevo: () -> Unit,
     goBack: () -> Unit,
@@ -51,7 +52,7 @@ fun SistemaBodyScreen(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = "Registro de Sistemas",
+                        text = "Registro de sistemas",
                         style = TextStyle(
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
@@ -67,9 +68,11 @@ fun SistemaBodyScreen(
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = Color(0xFF6200EE)
                 )
+
+
             )
         }
-    ) {paddingValues ->
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -81,9 +84,22 @@ fun SistemaBodyScreen(
                 label = { Text(text = "Nombre") },
                 value = uiState.nombre,
                 onValueChange = onNombreChange
+
             )
+            Spacer(modifier = Modifier.height(8.dp))
 
-
+            OutlinedTextField(
+                modifier = Modifier.fillMaxWidth(),
+                label = { Text(text = "Precio") },
+                value = if (uiState.precio == 0.0) "" else uiState.precio.toString(),
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Number
+                ),
+                onValueChange = {newValue ->
+                    val precio = newValue.toDoubleOrNull() ?: 0.0
+                    onPrecioChange(precio)
+                }
+            )
             Spacer(modifier = Modifier.height(8.dp))
 
             Row(
@@ -92,7 +108,6 @@ fun SistemaBodyScreen(
             ) {
                 OutlinedButton(
                     modifier = Modifier.weight(1f),
-
                     onClick = { save() }
                 ) {
                     Text(text = "Guardar")
@@ -107,16 +122,16 @@ fun SistemaBodyScreen(
                     Icon(Icons.Filled.Refresh, contentDescription = "Nuevo")
                 }
             }
-            uiState.errorMessage?.let { message ->
+
+            uiState.errorMessage?.let{ message ->
+                Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = message,
                     color = Color.Red,
                     style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Bold)
                 )
-                Spacer(modifier = Modifier.height(8.dp))
             }
 
         }
-
     }
 }
